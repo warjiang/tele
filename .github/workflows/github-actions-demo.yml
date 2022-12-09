@@ -7,6 +7,11 @@ jobs:
     services:
       subconverter:
         image: tindy2013/subconverter:latest
+        options: >-
+          --health-cmd "curl http://localhost:25500/version"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -19,9 +24,12 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - name: Connect to PostgreSQL
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Connect to Subconverter
         run: |
           echo "${SUBCONVERTER_HOST}"
-          ping -c 3 "${SUBCONVERTER_HOST}"
+          curl http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/version
         env:
           SUBCONVERTER_HOST: subconverter
+          SUBCONVERTER_PORT: 25500
