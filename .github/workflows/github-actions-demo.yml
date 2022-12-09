@@ -7,6 +7,9 @@ jobs:
     services:
       subconverter:
         image: tindy2013/subconverter:latest
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 25500:25500
         options: >-
           --health-cmd "nc -v -z -w 5 127.0.0.1 25500"
           --health-interval 10s
@@ -31,5 +34,5 @@ jobs:
           echo "${SUBCONVERTER_HOST}"
           curl http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/version
         env:
-          SUBCONVERTER_HOST: subconverter
+          SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
