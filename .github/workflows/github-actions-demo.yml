@@ -2,8 +2,11 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Explore-GitHub-Actions:
+  generate-clash-rules:
     runs-on: ubuntu-latest
+    services:
+      subconverter:
+        image: tindy2013/subconverter:latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -16,3 +19,9 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - name: Connect to PostgreSQL
+        run: |
+          echo "${SUBCONVERTER_HOST}"
+          ping -c 3 "${SUBCONVERTER_HOST}"
+        env:
+          SUBCONVERTER_HOST: subconverter
