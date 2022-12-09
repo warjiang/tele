@@ -33,5 +33,5 @@ jobs:
           curl http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/version
           node convert.js
         env:
-          SUBCONVERTER_HOST: localhost
+          SUBCONVERTER_HOST: subconverter
           SUBCONVERTER_PORT: 25500
