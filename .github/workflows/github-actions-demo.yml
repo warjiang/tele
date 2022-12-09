@@ -28,8 +28,6 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
-      - name: Check out repository code
-        uses: actions/checkout@v3
       - name: Install dependencies
         run: npm i
       - name: Connect to Subconverter
