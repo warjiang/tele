@@ -31,13 +31,14 @@ jobs:
         run: |
           echo "${SUBCONVERTER_HOST}"
           curl http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/version
+          mkdir -p dist
           node convert.js
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
       - name: Read clash rules
         run: |
-          cat dist/clashr.yaml
+          cat ./dist/clashr.yaml
       - uses: hujiulong/action-qiniu-upload@master
         with:
           access_key: ${{ secrets.QINIU_ACCESS_KEY }}
