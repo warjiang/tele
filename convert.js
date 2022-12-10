@@ -11,7 +11,7 @@ const axios = require("axios");
         SUBCONVERTER_HOST,
         SUBCONVERTER_PORT
     }))
-    const apiPath = `http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/converter/sub`;
+    const apiPath = `http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/sub`;
 
     const query = qs.encode({
         target: 'clashr',
