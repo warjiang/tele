@@ -38,7 +38,7 @@ jobs:
       - name: Read clash rules
         run: |
           cat clashr.yaml
-      - uses: actions/checkout@master
+      - uses: hujiulong/action-qiniu-upload@master
         with:
           access_key: ${{ secrets.QINIU_ACCESS_KEY }}
           secret_key: ${{ secrets.QINIU_SECRET_KEY }}
