@@ -23,10 +23,6 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: actions/checkout@v3
-      - run: |
-          ls -al 
-          pwd
-          tree .
       - uses: actions/setup-node@v3
         with:
           node-version: 14
