@@ -39,9 +39,9 @@ jobs:
         run: |
           cat clashr.yaml
       - run: |
-          echo ${{ secrets.QINIU_ACCESS_KEY }}"
-          echo ${{ secrets.QINIU_SECRET_KEY }}"
-          echo ${{ secrets.QINIU_BUCKET }}"
+          echo "${{ secrets.QINIU_ACCESS_KEY }}"
+          echo "${{ secrets.QINIU_SECRET_KEY }}"
+          echo "${{ secrets.QINIU_BUCKET }}"
       - uses: hujiulong/action-qiniu-upload@master
         with:
           access_key: ${{ secrets.QINIU_ACCESS_KEY }}
