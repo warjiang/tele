@@ -21,5 +21,5 @@ const axios = require("axios");
     console.log(finalUrl);
 
     const resp = await axios.get(finalUrl);
-    console.log(resp);
+    fs.writeFileSync('./clashr.yaml', resp.data);
 })();

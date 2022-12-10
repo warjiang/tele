@@ -35,3 +35,6 @@ jobs:
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
+      - name: Read clash rules
+        run: |
+          cat clashr.yaml
