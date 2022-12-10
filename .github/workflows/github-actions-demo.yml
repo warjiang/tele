@@ -44,4 +44,4 @@ jobs:
           secret_key: ${{ secrets.QINIU_SECRET_KEY }}
           bucket: ${{ secrets.QINIU_BUCKET }}
           source_dir: 'clashr.yaml'
-          dest_dir: '/clashr.yaml'
+          dest_dir: 'clashr.yaml'
