@@ -15,7 +15,8 @@ const axios = require("axios");
 
     const query = qs.encode({
         target: 'clashr',
-        url: subUrl
+        url: subUrl,
+        udp: false,
     })
     const finalUrl = `${apiPath}?${query}`
     console.log(finalUrl);
