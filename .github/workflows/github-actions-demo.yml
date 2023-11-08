@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       subconverter:
-        image: tindy2013/subconverter:latest
+        image: tindy2013/subconverter:0.8.1
         ports:
           # Opens tcp port 6379 on the host and service container
           - 25500:25500
