@@ -4,7 +4,7 @@ const axios = require("axios");
 
 
 (async () => {
-    const subUrl = fs.readFileSync('./subscribe.txt', 'utf8').toString();
+    const subUrl = fs.readFileSync('./subscribe.txt', 'utf8').toString().trim();
 
     const {SUBCONVERTER_HOST='127.0.0.1', SUBCONVERTER_PORT=25500} = process.env
     console.log(JSON.stringify({
@@ -22,5 +22,5 @@ const axios = require("axios");
     console.log(finalUrl);
 
     const resp = await axios.get(finalUrl);
-    fs.writeFileSync('./dist/clash2r.yaml', resp.data);
+    fs.writeFileSync('./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml', resp.data);
 })();
