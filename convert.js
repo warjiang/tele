@@ -4,7 +4,7 @@ const axios = require("axios");
 
 
 (async () => {
-    const subUrl = fs.readFileSync('./subscribe.txt', 'utf8').toString();
+    const subUrl = fs.readFileSync('./subscribe.txt', 'utf8').toString().trim();
 
     const {SUBCONVERTER_HOST='127.0.0.1', SUBCONVERTER_PORT=25500} = process.env
     console.log(JSON.stringify({
