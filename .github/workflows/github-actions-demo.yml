@@ -41,7 +41,7 @@ jobs:
           SUBCONVERTER_PORT: 25500
       - name: Read clash rules
         run: |
-          cat ./dist/clash2r.yaml
+          cat ./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml
       - uses: warjiang/action-qiniu-upload@master
         with:
           access_key: ${{ secrets.QINIU_ACCESS_KEY }}
