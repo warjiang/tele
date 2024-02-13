@@ -22,5 +22,5 @@ const axios = require("axios");
     console.log(finalUrl);
 
     const resp = await axios.get(finalUrl);
-    fs.writeFileSync('./dist/clash2r.yaml', resp.data);
+    fs.writeFileSync('./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml', resp.data);
 })();
