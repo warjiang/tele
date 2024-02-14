@@ -1,0 +1,18 @@
+# # Ignore everything
+# **
+
+# # Allow files and directories needed for building the Go app
+# !/go.mod
+# !/go.sum
+# !/main.go
+# !/pkg/
+# !/cmd/
+# !/internal/
+
+# # Allow Dockerfile (optional)
+# !/Dockerfile
+
+# Ignore specific directories (optional)
+.idea/
+.vscode/
+justmysocks
