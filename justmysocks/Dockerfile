@@ -8,6 +8,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o justmysocks .
 
 FROM alpine:3.19
+# tzdata: https://stackoverflow.com/questions/60103251/time-loadlocation-works-regularly-but-throws-an-error-on-my-docker-instance-how
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
     apk update && \
     apk --no-cache add ca-certificates tzdata
