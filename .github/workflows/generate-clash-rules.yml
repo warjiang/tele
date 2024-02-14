@@ -1,5 +1,5 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Generate clash rules
+run-name: ${{ github.actor }} is trigger generation 🚀
 on: 
   push:
   schedule:
@@ -26,9 +26,9 @@ jobs:
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: 14
+          node-version: 20
       - run: npm ci
       - name: Connect to Subconverter
         run: |
