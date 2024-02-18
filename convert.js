@@ -4,6 +4,8 @@ const axios = require("axios");
 
 
 (async () => {
+    console.log(process.argv)
+    console.log(process.argv.length)
     if (process.argv.length < 4) {
         console.log("Usage: node convert.js <subUrl> <targetFile>")
         return;
