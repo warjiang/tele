@@ -1,0 +1,37 @@
+name: Generate clash rules
+run-name: ${{ github.actor }} is trigger generation 🚀
+on: 
+  push:
+  schedule:
+    - cron: '0 */1 * * *'
+jobs:
+  generate-clash-rules:
+    runs-on: ubuntu-latest
+    services:
+      subconverter:
+        image: tindy2013/subconverter:0.8.1
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 25500:25500
+        options: >-
+          --health-cmd "nc -v -z -w 5 127.0.0.1 25500"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Setup AWS Cli Action
+        uses: warjiang/setup-awscli-action@v0.1.1
+      - name: Setup AWS config
+        run: |
+          make dir -p ~/.aws
+          echo $AWS_CREDENTIALS > ~/.aws/credentials
+          echo $AWS_CONFIG > ~/.aws/AWS_CONFIG
+      - name: Test Aws config
+        run: |
+          aws s3 ls
+          aws s3 ls --profile stardream
+          aws s3 ls --profile qiniu
