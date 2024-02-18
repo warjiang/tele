@@ -28,8 +28,8 @@ jobs:
       - name: Setup AWS config
         run: |
           mkdir -p ~/.aws
-          echo ${{ vars.AWS_CREDENTIALS }} > ~/.aws/credentials
-          echo ${{ vars.AWS_CONFIG }} > ~/.aws/config
+          echo "${{ vars.AWS_CREDENTIALS }}" > ~/.aws/credentials
+          echo "${{ vars.AWS_CONFIG }}" > ~/.aws/config
           cat ~/.aws/credentials
           cat ~/.aws/config
       - name: Test Aws config
