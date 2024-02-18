@@ -27,7 +27,7 @@ jobs:
         uses: warjiang/setup-awscli-action@v0.1.1
       - name: Setup AWS config
         run: |
-          make dir -p ~/.aws
+          mkdir -p ~/.aws
           echo $AWS_CREDENTIALS > ~/.aws/credentials
           echo $AWS_CONFIG > ~/.aws/AWS_CONFIG
       - name: Test Aws config
