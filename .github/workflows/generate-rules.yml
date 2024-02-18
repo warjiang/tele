@@ -38,14 +38,23 @@ jobs:
           aws --profile qiniu s3 ls
       - name: Install dependencies
         run: npm ci
-      - name: Generate rules
+      - name: Generate And Upload Rules
         run: |
-          node convert.js 'https://jjsubmarines.com/members/getsub.php?service=504873&id=1d8efeb0-46fa-4c06-8d2e-631c551112f2' './dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml'
-          node convert.js 'https://s.trojanflare.com/subscription/shadowrocket/632982f8-2eef-48ff-a5ac-e2a9b7df9c03' './dist/clash-b071df03-563e-48d7-9d25-0308f96e5ab2.yaml'
+          SHELL_FOLDER=$(pwd)
+          subscribes=$(cat $SHELL_FOLDER/subscribes.list | grep -v '^\s*$' | grep -v '^#')
+          for line in $subscribes; do
+              echo "Processing $line"
+              IFS='#' read -r -a array <<< "$line"
+              subscribe_link=${array[0]}
+              profile=${array[1]}
+              target_path=${array[2]}
+              tmp_filename=$(date +%s).yaml
+              echo "subscribe_link: $subscribe_link"
+              echo "target_path: $target_path"
+              echo "tmp_filename: $tmp_filename"
+              node convert.js $url ./dist/$tmp_filename
+              aws --profile $profile s3 cp ./dist/$tmp_filename $target_path
+          done
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
-      - name: Upload rules
-        run: |
-          aws --profile stardream s3 cp ./dist/clash-b071df03-563e-48d7-9d25-0308f96e5ab2.yaml s3://stardream-link-static/clash/clash-b071df03-563e-48d7-9d25-0308f96e5ab2.yaml
-          aws --profile qiniu s3 cp ./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml s3://savemoney/clash/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml
