@@ -4,9 +4,16 @@ const axios = require("axios");
 
 
 (async () => {
-    const subUrl = fs.readFileSync('./subscribe.txt', 'utf8').toString().trim();
+    if (process.argv.length < 4) {
+        console.log("Usage: node convert.js <subUrl> <targetFile>")
+        return;
+    }
+    const subUrl = process.argv[2];
+    const targetFile = process.argv[3];
+    console.log("subUrl", subUrl)
+    console.log("targetFile", targetFile)
 
-    const {SUBCONVERTER_HOST='127.0.0.1', SUBCONVERTER_PORT=25500} = process.env
+    const { SUBCONVERTER_HOST = '127.0.0.1', SUBCONVERTER_PORT = 25500 } = process.env
     console.log(JSON.stringify({
         SUBCONVERTER_HOST,
         SUBCONVERTER_PORT
@@ -19,8 +26,9 @@ const axios = require("axios");
         udp: false,
     })
     const finalUrl = `${apiPath}?${query}`
-    console.log(finalUrl);
+    console.log("finalUrl", finalUrl);
 
     const resp = await axios.get(finalUrl);
-    fs.writeFileSync('./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml', resp.data);
+    // fs.writeFileSync('./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml', resp.data);
+    fs.writeFileSync(targetFile, resp.data);
 })();
