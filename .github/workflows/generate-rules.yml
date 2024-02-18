@@ -52,7 +52,7 @@ jobs:
               echo "subscribe_link: $subscribe_link"
               echo "target_path: $target_path"
               echo "tmp_filename: $tmp_filename"
-              node convert.js $url ./dist/$tmp_filename
+              node convert.js $subscribe_link ./dist/$tmp_filename
               aws --profile $profile s3 cp ./dist/$tmp_filename $target_path
           done
         env:
