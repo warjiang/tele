@@ -1,4 +1,4 @@
-name: Generate clash rules
+name: Generate clash rules(mixed)
 run-name: ${{ github.actor }} is trigger generation 🚀
 on: 
   push:
@@ -36,6 +36,8 @@ jobs:
           aws --version
           aws --profile stardream s3 ls
           aws --profile qiniu s3 ls
+      - name: Install dependencies
+        run: npm ci
       - name: Generate rules
         run: |
           node convert.js https://jjsubmarines.com/members/getsub.php?service=504873&id=1d8efeb0-46fa-4c06-8d2e-631c551112f2  ./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml
