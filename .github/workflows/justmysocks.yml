@@ -1,4 +1,4 @@
-name: Generate clash rules by justmysocks
+name: Generate justmysocks-clash rules
 run-name: ${{ github.actor }} is trigger generation 🚀
 on: 
   push:
@@ -23,13 +23,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Setup AWS Cli Action
+      - name: Setup AWS CLI Action
         uses: warjiang/setup-awscli-action@v0.1.1
       - name: Setup AWS config
         run: |
           mkdir -p ~/.aws
-          echo "${{ vars.AWS_CREDENTIALS }}" > ~/.aws/credentials
-          echo "${{ vars.AWS_CONFIG }}" > ~/.aws/config
+          echo "${{ secrets.AWS_CREDENTIALS }}" > ~/.aws/credentials
+          echo "${{ secrets.AWS_CONFIG }}" > ~/.aws/config
           mkdir -p dist
       - name: Test AWS config
         run: |
@@ -40,15 +40,12 @@ jobs:
       - name: Generate And Upload Rules
         run: |
           SHELL_FOLDER=$(pwd)
-          SUBSCRIBE_LINK="${{ vars.JUSTMYSOCKS_SUBSCRIBE_LINK }}"
+          SUBSCRIBE_LINK="${{ secrets.JUSTMYSOCKS_SUBSCRIBE_LINK }}"
           IFS='#' read -r -a array <<< "$SUBSCRIBE_LINK"
           subscribe_link=${array[0]}
           profile=${array[1]}
           target_path=${array[2]}
           tmp_filename=$(date +%s).yaml
-          echo "subscribe_link: $subscribe_link"
-          echo "target_path: $target_path"
-          echo "tmp_filename: $tmp_filename"
           node convert.js $subscribe_link ./dist/$tmp_filename
           aws --profile $profile s3 cp --acl public-read ./dist/$tmp_filename $target_path
         env:

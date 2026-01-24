@@ -1,4 +1,4 @@
-name: Generate flyingbird-clash rules(mixed)
+name: Generate flyingbird-clash rules
 run-name: ${{ github.actor }} is trigger generation 🚀
 on: 
   push:
@@ -12,13 +12,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Setup AWS Cli Action
+      - name: Setup AWS CLI Action
         uses: warjiang/setup-awscli-action@v0.1.1
       - name: Setup AWS config
         run: |
           mkdir -p ~/.aws
-          echo "${{ vars.AWS_CREDENTIALS }}" > ~/.aws/credentials
-          echo "${{ vars.AWS_CONFIG }}" > ~/.aws/config
+          echo "${{ secrets.AWS_CREDENTIALS }}" > ~/.aws/credentials
+          echo "${{ secrets.AWS_CONFIG }}" > ~/.aws/config
           mkdir -p dist
       - name: Test AWS config
         run: |
@@ -27,10 +27,10 @@ jobs:
       - name: Generate And Upload Rules
         run: |
           SHELL_FOLDER=$(pwd)
-          SUBSCRIBE_LINK="${{ vars.FLYINGBIRD_SUBSCRIBE_LINK }}"
+          SUBSCRIBE_LINK="${{ secrets.FLYINGBIRD_SUBSCRIBE_LINK }}"
           IFS='#' read -r -a array <<< "$SUBSCRIBE_LINK"
           subscribe_link=${array[0]}
           profile=${array[1]}
           target_path=${array[2]}
-          wget "$subscribe_link" -O clash.yaml
-          aws --profile ${profile} s3 cp --acl public-read ./clash.yaml ${$target_path}
+          wget -q "$subscribe_link" -O clash.yaml
+          aws --profile ${profile} s3 cp --acl public-read ./clash.yaml ${target_path}

@@ -4,16 +4,16 @@ const axios = require("axios");
 
 
 (async () => {
-    console.log(process.argv)
-    console.log(process.argv.length)
+    // console.log(process.argv)
+    // console.log(process.argv.length)
     if (process.argv.length < 4) {
         console.log("Usage: node convert.js <subUrl> <targetFile>")
         return;
     }
     const subUrl = process.argv[2];
     const targetFile = process.argv[3];
-    console.log("subUrl", subUrl)
-    console.log("targetFile", targetFile)
+    // console.log("subUrl", subUrl)
+    // console.log("targetFile", targetFile)
 
     const { SUBCONVERTER_HOST = '127.0.0.1', SUBCONVERTER_PORT = 25500 } = process.env
     console.log(JSON.stringify({
@@ -28,7 +28,7 @@ const axios = require("axios");
         udp: false,
     })
     const finalUrl = `${apiPath}?${query}`
-    console.log("finalUrl", finalUrl);
+    // console.log("finalUrl", finalUrl);
 
     const resp = await axios.get(finalUrl);
     // fs.writeFileSync('./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml', resp.data);
