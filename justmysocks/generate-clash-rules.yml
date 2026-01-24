@@ -1,0 +1,51 @@
+name: Generate clash rules
+run-name: ${{ github.actor }} is trigger generation 🚀
+on: 
+  push:
+  schedule:
+    - cron: '0 */1 * * *'
+jobs:
+  generate-clash-rules:
+    runs-on: ubuntu-latest
+    services:
+      subconverter:
+        image: tindy2013/subconverter:0.8.1
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 25500:25500
+        options: >-
+          --health-cmd "nc -v -z -w 5 127.0.0.1 25500"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+      - run: echo "🍏 This job's status is ${{ job.status }}."
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Connect to Subconverter
+        run: |
+          echo "${SUBCONVERTER_HOST}"
+          curl http://${SUBCONVERTER_HOST}:${SUBCONVERTER_PORT}/version
+          mkdir -p dist
+          node convert.js
+        env:
+          SUBCONVERTER_HOST: localhost
+          SUBCONVERTER_PORT: 25500
+      - name: Read clash rules
+        run: |
+          cat ./dist/clash-3f969236-d760-428d-8f00-06e0465e879a.yaml
+      - uses: warjiang/action-qiniu-upload@master
+        with:
+          access_key: ${{ secrets.QINIU_ACCESS_KEY }}
+          secret_key: ${{ secrets.QINIU_SECRET_KEY }}
+          bucket: ${{ secrets.QINIU_BUCKET }}
+          source_dir: './dist'
+          dest_dir: '/clash'
