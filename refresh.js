@@ -1,14 +1,17 @@
 const crypto = require('crypto');
 const axios = require('axios');
 
-function generateQiniuV2Token(accessKey, secretKey, method, path, host, contentType, body) {
-    const signingStr = `${method} ${path}\nHost: ${host}\nContent-Type: ${contentType}\n\n${body}`;
+// Qiniu Fusion CDN API (fusion.qiniuapi.com) uses QBox authentication.
+// The signing string is just the request path followed by a newline character.
+// See: https://developer.qiniu.com/fusion/13360/fusion-api-auth-guide
+function generateQBoxToken(accessKey, secretKey, path) {
+    const signingStr = `${path}\n`;
     const sign = crypto.createHmac('sha1', secretKey).update(signingStr).digest();
     const encodedSign = sign.toString('base64')
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=/g, '');
-    return `Qiniu ${accessKey}:${encodedSign}`;
+    return `QBox ${accessKey}:${encodedSign}`;
 }
 
 (async () => {
@@ -30,7 +33,7 @@ function generateQiniuV2Token(accessKey, secretKey, method, path, host, contentT
     const contentType = 'application/json';
     const body = JSON.stringify({ urls: [cdnUrl] });
 
-    const token = generateQiniuV2Token(QINIU_ACCESS_KEY, QINIU_SECRET_KEY, 'POST', apiPath, host, contentType, body);
+    const token = generateQBoxToken(QINIU_ACCESS_KEY, QINIU_SECRET_KEY, apiPath);
 
     console.log(`Refreshing CDN cache for: ${cdnUrl}`);
 
