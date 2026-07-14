@@ -45,9 +45,17 @@ jobs:
           subscribe_link=${array[0]}
           profile=${array[1]}
           target_path=${array[2]}
+          cdn_url=${array[3]}
+          if [ -z "$cdn_url" ]; then
+            echo "cdn_url is not set in JUSTMYSOCKS_SUBSCRIBE_LINK (expected format: subscribe_link#profile#s3_target_path#cdn_url)"
+            exit 1
+          fi
           tmp_filename=$(date +%s).yaml
           node convert.js $subscribe_link ./dist/$tmp_filename
           aws --profile $profile s3 cp --acl public-read ./dist/$tmp_filename $target_path
+          node refresh.js $cdn_url
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
+          QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
+          QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}

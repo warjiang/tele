@@ -33,5 +33,14 @@ jobs:
           subscribe_link=${array[0]}
           profile=${array[1]}
           target_path=${array[2]}
+          cdn_url=${array[3]}
+          if [ -z "$cdn_url" ]; then
+            echo "cdn_url is not set in FLYINGBIRD_SUBSCRIBE_LINK (expected format: subscribe_link#profile#s3_target_path#cdn_url)"
+            exit 1
+          fi
           wget -q "$subscribe_link" -O clash.yaml
           aws --profile ${profile} s3 cp --acl public-read ./clash.yaml ${target_path}
+          node refresh.js $cdn_url
+        env:
+          QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
+          QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
