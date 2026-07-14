@@ -1,9 +1,7 @@
 name: Generate justmysocks-clash rules
 run-name: ${{ github.actor }} is trigger generation 🚀
-on: 
-  push:
-  schedule:
-    - cron: '0 */1 * * *'
+on:
+  workflow_dispatch:
 jobs:
   generate-clash-rules:
     runs-on: ubuntu-latest
@@ -45,9 +43,20 @@ jobs:
           subscribe_link=${array[0]}
           profile=${array[1]}
           target_path=${array[2]}
+          cdn_prefix=${array[3]}
+          if [ -z "$cdn_prefix" ]; then
+            echo "cdn_prefix is not set in SUBSCRIBE_LINK config (expected format: subscribe_link#profile#s3://bucket/object_key#https://cdn_prefix/)"
+            exit 1
+          fi
           tmp_filename=$(date +%s).yaml
           node convert.js $subscribe_link ./dist/$tmp_filename
           aws --profile $profile s3 cp --acl public-read ./dist/$tmp_filename $target_path
+          # Derive object key from a standard s3://bucket/key target_path; non-matching values are left unchanged
+          object_key=$(echo "$target_path" | sed 's|^s3://[^/]+/||')
+          cdn_url="${cdn_prefix%/}/${object_key}"
+          node refresh.js $cdn_url
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
+          QINIU_ACCESS_KEY: ${{ secrets.QINIU_ACCESS_KEY }}
+          QINIU_SECRET_KEY: ${{ secrets.QINIU_SECRET_KEY }}
