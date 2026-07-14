@@ -35,7 +35,7 @@ jobs:
           target_path=${array[2]}
           cdn_prefix=${array[3]}
           if [ -z "$cdn_prefix" ]; then
-            echo "cdn_prefix is not set in SUBSCRIBE_LINK config from secrets.FLYINGBIRD_SUBSCRIBE_LINK (expected format: subscribe_link#profile#s3://bucket/object_key#https://cdn_prefix/)"
+            echo "cdn_prefix is not set in SUBSCRIBE_LINK config (expected format: subscribe_link#profile#s3://bucket/object_key#https://cdn_prefix/)"
             exit 1
           fi
           wget -q "$subscribe_link" -O clash.yaml

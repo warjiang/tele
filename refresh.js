@@ -13,7 +13,7 @@ function generateQBoxToken(accessKey, secretKey, method, path, host, contentType
 
 (async () => {
     if (process.argv.length < 3) {
-        console.error("Usage: node refresh.js <cdn_url>");
+        console.error("Usage: node refresh.js <cdn_url> (e.g. https://cdn.example.com/path/to/file.yaml)");
         process.exit(1);
     }
 
