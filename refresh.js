@@ -21,7 +21,7 @@ function generateQBoxToken(accessKey, secretKey, method, path, host, contentType
     const { QINIU_ACCESS_KEY, QINIU_SECRET_KEY } = process.env;
 
     if (!QINIU_ACCESS_KEY || !QINIU_SECRET_KEY) {
-        console.error("QINIU_ACCESS_KEY and QINIU_SECRET_KEY are required environment variables");
+        console.error("Missing required environment variables: QINIU_ACCESS_KEY and QINIU_SECRET_KEY must be set");
         process.exit(1);
     }
 
