@@ -52,8 +52,7 @@ jobs:
           node convert.js "$subscribe_link" "./dist/$tmp_filename"
           aws --profile "$profile" s3 cp --acl public-read "./dist/$tmp_filename" "$target_path"
           # Derive object key from s3://bucket/key and tolerate trailing slash target paths
-          normalized_target_path=${target_path#\"}
-          normalized_target_path=${normalized_target_path%\"}
+          normalized_target_path=${target_path//[\"\'\r]/}
           if [[ "$normalized_target_path" == s3://* ]]; then
             object_key=${normalized_target_path#s3://}
             object_key=${object_key#*/}
