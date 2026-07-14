@@ -1,9 +1,7 @@
 name: Generate justmysocks-clash rules
 run-name: ${{ github.actor }} is trigger generation 🚀
-on: 
-  push:
-  schedule:
-    - cron: '0 */1 * * *'
+on:
+  workflow_dispatch:
 jobs:
   generate-clash-rules:
     runs-on: ubuntu-latest
