@@ -13,7 +13,7 @@ function generateQBoxToken(accessKey, secretKey, method, path, host, contentType
 
 (async () => {
     if (process.argv.length < 3) {
-        console.log("Usage: node refresh.js <cdn_url>");
+        console.error("Usage: node refresh.js <cdn_url>");
         process.exit(1);
     }
 
@@ -43,7 +43,9 @@ function generateQBoxToken(accessKey, secretKey, method, path, host, contentType
         });
         console.log('Cache refresh response:', JSON.stringify(resp.data));
     } catch (err) {
-        const detail = err.response ? JSON.stringify(err.response.data) : err.message;
+        const detail = err.response
+            ? (err.response.data ? JSON.stringify(err.response.data) : `HTTP ${err.response.status}`)
+            : err.message;
         console.error(`Failed to refresh CDN cache: ${detail}`);
         process.exit(1);
     }

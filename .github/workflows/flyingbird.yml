@@ -40,7 +40,7 @@ jobs:
           fi
           wget -q "$subscribe_link" -O clash.yaml
           aws --profile ${profile} s3 cp --acl public-read ./clash.yaml ${target_path}
-          # Derive object key from target_path by stripping the standard s3://bucket/ prefix
+          # Derive object key from a standard s3://bucket/key target_path; non-matching values are left unchanged
           object_key=$(echo "$target_path" | sed 's|^s3://[^/]+/||')
           cdn_url="${cdn_prefix%/}/${object_key}"
           node refresh.js $cdn_url
