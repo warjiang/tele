@@ -1,14 +1,14 @@
 const crypto = require('crypto');
 const axios = require('axios');
 
-function generateQBoxToken(accessKey, secretKey, method, path, host, contentType, body) {
+function generateQiniuV2Token(accessKey, secretKey, method, path, host, contentType, body) {
     const signingStr = `${method} ${path}\nHost: ${host}\nContent-Type: ${contentType}\n\n${body}`;
     const sign = crypto.createHmac('sha1', secretKey).update(signingStr).digest();
     const encodedSign = sign.toString('base64')
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/=/g, '');
-    return `QBox ${accessKey}:${encodedSign}`;
+    return `Qiniu ${accessKey}:${encodedSign}`;
 }
 
 (async () => {
@@ -30,7 +30,7 @@ function generateQBoxToken(accessKey, secretKey, method, path, host, contentType
     const contentType = 'application/json';
     const body = JSON.stringify({ urls: [cdnUrl] });
 
-    const token = generateQBoxToken(QINIU_ACCESS_KEY, QINIU_SECRET_KEY, 'POST', apiPath, host, contentType, body);
+    const token = generateQiniuV2Token(QINIU_ACCESS_KEY, QINIU_SECRET_KEY, 'POST', apiPath, host, contentType, body);
 
     console.log(`Refreshing CDN cache for: ${cdnUrl}`);
 

@@ -42,19 +42,29 @@ jobs:
           IFS='#' read -r -a array <<< "$SUBSCRIBE_LINK"
           subscribe_link=${array[0]}
           profile=${array[1]}
-          target_path=${array[2]}
+          target_path=$(echo "${array[2]}" | xargs)
           cdn_prefix=${array[3]}
           if [ -z "$cdn_prefix" ]; then
             echo "cdn_prefix is not set in SUBSCRIBE_LINK config (expected format: subscribe_link#profile#s3://bucket/object_key#https://cdn_prefix/)"
             exit 1
           fi
           tmp_filename=$(date +%s).yaml
-          node convert.js $subscribe_link ./dist/$tmp_filename
-          aws --profile $profile s3 cp --acl public-read ./dist/$tmp_filename $target_path
-          # Derive object key from a standard s3://bucket/key target_path; non-matching values are left unchanged
-          object_key=$(echo "$target_path" | sed 's|^s3://[^/]+/||')
+          node convert.js "$subscribe_link" "./dist/$tmp_filename"
+          aws --profile "$profile" s3 cp --acl public-read "./dist/$tmp_filename" "$target_path"
+          # Derive object key from s3://bucket/key and tolerate trailing slash target paths
+          normalized_target_path=${target_path#\"}
+          normalized_target_path=${normalized_target_path%\"}
+          if [[ "$normalized_target_path" == s3://* ]]; then
+            object_key=${normalized_target_path#s3://}
+            object_key=${object_key#*/}
+          else
+            object_key=$normalized_target_path
+          fi
+          if [[ "$object_key" == */ ]]; then
+            object_key="${object_key}${tmp_filename}"
+          fi
           cdn_url="${cdn_prefix%/}/${object_key}"
-          node refresh.js $cdn_url
+          node refresh.js "$cdn_url"
         env:
           SUBCONVERTER_HOST: localhost
           SUBCONVERTER_PORT: 25500
