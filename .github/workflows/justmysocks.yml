@@ -52,12 +52,20 @@ jobs:
           node convert.js "$subscribe_link" "./dist/$tmp_filename"
           aws --profile "$profile" s3 cp --acl public-read "./dist/$tmp_filename" "$target_path"
           # Derive object key from s3://bucket/key and tolerate trailing slash target paths
-          normalized_target_path=$(printf '%s' "$target_path" | sed -e "s/[\"']//g" -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          normalized_target_path=$(printf '%s' "$target_path" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+          if [[ "$normalized_target_path" == *"'"* || "$normalized_target_path" == *'"'* ]]; then
+            echo "target_path must not contain quote characters: $normalized_target_path"
+            exit 1
+          fi
           if [[ "$normalized_target_path" == s3://* ]]; then
             object_key=${normalized_target_path#s3://}
             object_key=${object_key#*/}
           else
             object_key=$normalized_target_path
+          fi
+          if [ -z "$object_key" ] || [ "$object_key" = "/" ]; then
+            echo "Could not derive a valid object key from target_path: $normalized_target_path"
+            exit 1
           fi
           if [[ "$object_key" == */ ]]; then
             object_key="${object_key}${tmp_filename}"
